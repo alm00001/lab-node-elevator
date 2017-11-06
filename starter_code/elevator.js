@@ -6,11 +6,11 @@ class Elevator {
     this.direction = "up";
     this.interval;
     this.waitingList = [];
-    this.passengers =[];
+    this.passengers = [];
   }
 
   start() {
-    this.interval = setInterval(() => {this.update();},1000);
+    this.interval = setInterval(() => {this.update();}, 1000);
   }
 
   stop() {
@@ -18,27 +18,62 @@ class Elevator {
   }
   update() {
     this.log();
-    //lista de plantas a las que el ascensor tiene que servir
-
   }
 
-  _passengersEnter() {
-
+  passengersEnter(person) {
+    this.passengers.push(person);
+    this.requests.push(person.destinationFloor);
+    console.log(`${person.name} has enter the elevator`);
   }
-  _passengersLeave() {
-
+  passengersLeave(person) {
+    console.log(`${person.name} has exit the elevator`);
   }
 
   floorUp() {
-    this.floor<this.MAXFLOOR ? this.floor++ : this.floor = this.floor;
-  //  waitingListforEach(){};
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //if waitinlist contain a person with atribute person.origin floor === this floor then add the person in  passenger array, delete the passenger from the waiting list, add the destination floor f the passenger to the elevarto request and show "Julia has enter the elevator"
-    //check passengers collection and if a passenger destination floor matches de current floor, delete de person from the passengers array and show "Julia has left the elevator"
+    this.floor < this.MAXFLOOR ? (
+      this.floor += 1
+    ) : (
+      this.direction = "down",
+      console.log("You are at the last Floor")
+
+    );
+
+    this.passengers.forEach((e, i) => {
+      if (e.destinationFloor == this.floor) {
+        this.passengersLeave(e);
+        this.passengers.splice(i, 1);
+      }
+    });
+
+    this.waitingList.forEach((e, i) => {
+      if (e.originFloor == this.floor) {
+        this.passengersEnter(e);
+        this.waitingList.splice(i, 1);
+      }
+    });
   }
 
   floorDown() {
-    this.floor>0 ? this.floor-- : this.floor = this.floor;
+    this.floor > 0 ? (
+      this.floor--
+    ) : (
+      this.direction = "up",
+      console.log("You are at the bottom")
+    );
+
+    this.passengers.forEach((e, i) => {
+      if (e.destinationFloor == this.floor) {
+        this.passengersLeave(e);
+        this.passengers.splice(i, 1);
+      }
+    });
+
+    this.waitingList.forEach((e, i) => {
+      if (e.originFloor == this.floor) {
+        this.passengersEnter(e);
+        this.waitingList.splice(i, 1);
+      }
+    });
   }
 
   call(person) {
